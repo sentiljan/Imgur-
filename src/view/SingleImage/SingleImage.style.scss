@@ -1,0 +1,30 @@
+.singleImage {
+  margin: auto;
+  img {
+    max-width: 100% !important;
+    min-width: 150px;
+  }
+  &__meta {
+    padding: 20px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+
+    &--votes {
+      display: flex;
+      gap: 15px;
+
+      .anticon {
+        font-size: 25px;
+      }
+      &--like {
+        color: green;
+      }
+
+      &--dislike {
+        color: red;
+      }
+    }
+  }
+}

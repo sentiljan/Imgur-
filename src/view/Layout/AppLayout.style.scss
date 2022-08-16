@@ -1,0 +1,38 @@
+.layout {
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    a {
+      display: flex;
+    }
+
+    &--checkbox {
+      align-items: center;
+      color: #fff !important;
+    }
+
+    .ant-select {
+      padding: 0 10px;
+      border-left: solid 1px white;
+    }
+  }
+
+  main {
+    max-width: 100%;
+    min-height: 80vh;
+    padding: 50px !important;
+    margin: auto;
+
+    .ant-list-item {
+      &:hover {
+        box-shadow: rgba(29, 31, 34, 0.2) 0px 8px 24px;
+      }
+    }
+
+    .anticon-loading {
+      margin: auto;
+    }
+  }
+}
