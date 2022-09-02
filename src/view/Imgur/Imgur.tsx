@@ -2,9 +2,12 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { Card, List } from "antd";
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { dataSelector } from "../../store/imgur/dataSelctor";
 import { Section, Sort, Window } from "../Layout/AppLayout";
 import "./Imgur.style.scss";
+import { setData as setImgurData } from "../../store/imgur/dataSlice";
 
 interface Props {
   showViral: boolean;
@@ -16,6 +19,7 @@ interface Props {
 export interface Images {
   link: string;
   id: number;
+  type: string;
 }
 
 interface GalleryType {
@@ -24,16 +28,22 @@ interface GalleryType {
   images: Images[];
 }
 
+interface ImgurDataType {
+  data: GalleryType[];
+}
+
 export const Imgur = ({
   showViral,
   section,
   sort,
   window,
 }: Props): JSX.Element => {
-  const [data, setData] = useState<GalleryType[]>([]);
+  // const [data, setData] = useState<GalleryType[]>([]);
   const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const imgurData: ImgurDataType = useSelector(dataSelector);
 
   const getGalleryData = useCallback(() => {
     const options = {
@@ -48,19 +58,19 @@ export const Imgur = ({
     axios
       .request(options)
       .then(function (response) {
-        setData(response.data.data);
+        dispatch(setImgurData({ data: response.data.data }));
         setLoading(false);
       })
       .catch(function (error) {
         console.error(error);
       });
-  }, [page, section, showViral, sort, window]);
+  }, [dispatch, page, section, showViral, sort, window]);
 
   useEffect(() => {
     getGalleryData();
   }, [getGalleryData]);
 
-  const filterVideos = (item: any) => {
+  const filterVideos = (item: GalleryType) => {
     if (item.images) {
       return item.images[0].type === "image/jpeg";
     }
@@ -70,7 +80,7 @@ export const Imgur = ({
     <>
       {!loading ? (
         <div className="imgur">
-          {data.length > 1 ? (
+          {imgurData.data.length > 1 ? (
             <List
               grid={{ gutter: 16, column: 4 }}
               pagination={{
@@ -80,7 +90,7 @@ export const Imgur = ({
                 pageSize: 16,
                 hideOnSinglePage: true,
               }}
-              dataSource={data.filter(filterVideos)}
+              dataSource={imgurData.data.filter(filterVideos)}
               renderItem={(item: GalleryType) => {
                 if (item.images) {
                   return (
